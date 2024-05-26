@@ -86,7 +86,7 @@ export default function App() {
       pickerSize, pickerSize);
 
     // Draw grid/pixel borders
-    const lineDist = Math.ceil(pickerSize / zoomSize);
+    const spacing = Math.ceil(pickerSize / zoomSize);
 
     pickerContext.strokeStyle = 'black';
     pickerContext.lineWidth = 1;
@@ -94,28 +94,28 @@ export default function App() {
     // Vertical lines
     for (let i = 0; i <= zoomSize; i++) {
       pickerContext.beginPath();
-      pickerContext.moveTo(i * lineDist, 0);
-      pickerContext.lineTo(i * lineDist, pickerSize);
+      pickerContext.moveTo(i * spacing, 0);
+      pickerContext.lineTo(i * spacing, pickerSize);
       pickerContext.stroke();
     }
 
     // Horizontal lines
     for (let i = 0; i <= zoomSize; i++) {
       pickerContext.beginPath();
-      pickerContext.moveTo(0, i * lineDist);
-      pickerContext.lineTo(pickerSize, i * lineDist);
+      pickerContext.moveTo(0, i * spacing);
+      pickerContext.lineTo(pickerSize, i * spacing);
       pickerContext.stroke();
     }
 
     // Draw a white square in the center
-    const centerX = Math.floor(zoomSize / 2) * lineDist;
-    const centerY = Math.floor(zoomSize / 2) * lineDist;
+    const centerX = Math.floor(zoomSize / 2) * spacing;
+    const centerY = Math.floor(zoomSize / 2) * spacing;
 
     pickerContext.strokeStyle = 'white';
     pickerContext.lineWidth = 2;
 
     pickerContext.beginPath();
-    pickerContext.rect(centerX, centerY, lineDist, lineDist);
+    pickerContext.rect(centerX, centerY, spacing, spacing);
     pickerContext.stroke();
   };
 
