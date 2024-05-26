@@ -1,39 +1,44 @@
-import { FunctionComponent, RefObject } from 'react';
-
+import { FunctionComponent, RefObject, useEffect } from 'react';
+import { rgbaToHex } from '../utils';
 
 const ColorPicker: FunctionComponent<{
   pickerRef: RefObject<HTMLCanvasElement>;
-  x: number;
-  y: number;
-  imageData: ImageData | null;
-  color: string
-}> = ({ pickerRef, x, y, imageData, color }) => {
-  const size = 50;
-  const zoomSize = 10;
+  size: number;
+  color: string;
+  visible: boolean;
+  left: number;
+  top: number;
+}> = ({ pickerRef, size, color, visible, left, top }) => {
 
+  useEffect(() => {
+    if (!pickerRef.current) return;
+
+    const pickerCanvas = pickerRef.current;
+    const pickerContext = pickerCanvas.getContext('2d');
+
+    if (!pickerContext) return;
+
+    pickerContext.imageSmoothingEnabled = false;
+  }, [pickerRef]);
 
   return (
     <div id='color-picker'
-      style={{
-        border: `2px solid ${color}`,
-        top: y - size / 2,
-        left: x - size / 2
-      }}>
-      {imageData && (
-        <canvas
-          width={zoomSize}
-          height={zoomSize}
-          style={{
-            display: 'block',
-            margin: 'auto',
-            marginTop: (size - zoomSize) / 2,
-            imageRendering: 'pixelated',
-          }}
-          ref={pickerRef}
-        />
-      )}
+      style={{ visibility: visible ? 'visible' : 'hidden', left, top }}>
+      <canvas ref={pickerRef}
+        width={size}
+        height={size}
+        style={{
+          display: 'block',
+          margin: 'auto',
+          // marginTop: (size - zoomSize) / 2,
+          // imageRendering: 'pixelated',
+          borderRadius: '50%',
+          border: `4px solid ${color}`
+        }} />
+
+      <div> {rgbaToHex(color)} </div>
     </div>
-  );
-};
+  )
+}
 
 export default ColorPicker;

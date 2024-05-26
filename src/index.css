@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  /* margin: 0; */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -36,15 +36,27 @@ body {
 
 #image-canvas {
   display: block;
-  padding: 2rem;
+  /* padding: 2rem; */
   margin-left: auto;
   margin-right: auto;
+  /* cursor: none; */
 }
 
 #color-picker {
   position: absolute;
-  width: size;
-  height: size;
-  border-radius: 50%;
+  /* width: 2rem;
+  height: 2rem; */
+  /* border-radius: 50%; */
+  image-rendering: pixelated;
   pointer-events: none;
+}
+
+#color-picker > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 120%);
+  background-color: darkgrey;
+  padding: 0.2rem;
+  border-radius: 0.2rem;
 }
