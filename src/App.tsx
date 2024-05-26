@@ -150,9 +150,21 @@ export default function App() {
 
       img.src = image;
     }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'p' || event.key === 'P') {
+        setPicking(p => !p);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [image, width, height]);
 
-  const handleEyeDropperClick = (): void => setPicking(!picking);
+  const handleEyeDropperClick = (): void => setPicking(p => !p);
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files[0]) {
