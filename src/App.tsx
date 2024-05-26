@@ -1,11 +1,8 @@
 import { useState, useRef, useEffect, Dispatch, ChangeEvent, SetStateAction } from 'react';
-import { ReactComponent as EyeDropperIcon } from './eye-dropper-solid.svg';
 import './App.css';
 import useWindowSize from './hooks/window-size';
 import Controls from './components/Controls';
 import ColorPicker from './components/ColorPicker';
-import ImageCanvas from './components/ImageCanvas';
-import { rgbaToHex } from './utils';
 
 export default function App() {
   const [picking, setPicking] = useState<boolean>(false);
@@ -14,7 +11,6 @@ export default function App() {
   const [image, setImage] = useState<string | null>(null);
 
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [zoomedImageData, setZoomedImageData] = useState<ImageData | null>(null);
 
   const imageCanvasRef = useRef<HTMLCanvasElement>(null);
   const pickerRef = useRef<HTMLCanvasElement>(null);
@@ -44,27 +40,6 @@ export default function App() {
     const color = `rgb(${data[0]} ${data[1]} ${data[2]} / ${data[3] / 255})`;
 
     setColor(color);
-
-    // if (rect) {
-    //   const x = e.clientX - rect.left;
-    //   const y = e.clientY - rect.top;
-    //   setMousePos({ x, y });
-
-    //   if (picking && context) {
-    //     const pixelData = context.getImageData(x, y, 1, 1).data;
-    //     const color = `rgb(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]})`;
-    //     setColor(color);
-
-    //     const zoomFactor = 10; // adjust as needed
-    //     const zoomedData = context.getImageData(
-    //       x - zoomFactor / 2,
-    //       y - zoomFactor / 2,
-    //       zoomFactor,
-    //       zoomFactor
-    //     );
-    //     setZoomedImageData(zoomedData);
-    //   }
-    // }
   };
 
   const updateZoom = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -88,20 +63,7 @@ export default function App() {
     const x = event.clientX - bounding.left;
     const y = event.clientY - bounding.top;
 
-    // pickerContext.clearRect(0, 0, pickerCanvas.width, pickerCanvas.height);
-
-    console.log('canvas.width', canvas.width)
-    console.log('x', x, '=', event.clientX, '-', bounding.left)
-    console.log('y', y, '=', event.clientY, '-', bounding.top)
-
     // Offset the x and y coordinates in order to center the zoomed image
-    // pickerContext.drawImage(canvas,
-    //   Math.max(0, x - (((canvas.width % 2) === 0) ? Math.floor(zoomSize / 2) : (zoomSize / 2))),
-    //   Math.max(0, y - (((canvas.height % 2) === 0) ? Math.floor(zoomSize / 2) : (zoomSize / 2))),
-    //   zoomSize, zoomSize,
-    //   0, 0,
-    //   pickerSize, pickerSize);
-
     pickerContext.drawImage(canvas,
       Math.floor(Math.max(0, x - (zoomSize / 2))),
       Math.floor(Math.max(0, y - (zoomSize / 2))),
@@ -143,21 +105,9 @@ export default function App() {
     pickerContext.stroke();
   };
 
-  // Responds to changes in the win
+  // Responds to changes in the window size (or image upload)
   useEffect(() => {
     if (image && imageCanvasRef.current) {
-      // if (!pickerRef.current) return;
-
-      // const pickerCanvas = pickerRef.current;
-      // const pickerContext = pickerCanvas.getContext('2d');
-
-      // if (!pickerContext) return;
-
-      // pickerContext.imageSmoothingEnabled = false;
-      // pickerContext.mozImageSmoothingEnabled = false;
-      // pickerContext.webkitImageSmoothingEnabled = false;
-      // pickerContext.msImageSmoothingEnabled = false;
-
       const paddingRem = 0;
       const paddingPx = paddingRem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
@@ -220,43 +170,10 @@ export default function App() {
 
   return (
     <>
-      <Controls
-        picking={picking}
+      <Controls picking={picking}
         color={selectedColor}
         handleEyeDropperClick={handleEyeDropperClick}
         handleImageUpload={handleImageUpload} />
-      {/* <div id='controls-container'>
-        <button
-          id='toggle-button'
-          className={`${picking ? 'toggle-button-active' : ''}`}
-          onClick={() => {
-            setPicking(!picking);
-            // setButtonClicked(true);
-            // setTimeout(() => setButtonClicked(false), 300);
-          }}
-        >
-          <EyeDropperIcon
-            style={{
-              height: '1rem',
-              width: '1rem',
-            }}
-          />
-        </button>
-
-        <span><strong>{rgbaToHex(selectedColor)}</strong></span>
-
-        <input id='image-upload'
-          type='file'
-          // style={{ display: 'none' }}
-          onChange={event => {
-            if (event.target.files && event.target.files[0]) {
-              const reader = new FileReader();
-              reader.onload = e => setImage(e.target?.result as string);
-              reader.readAsDataURL(event.target.files[0]);
-            }
-          }}
-        />
-      </div> */}
 
       <ColorPicker pickerRef={pickerRef}
         color={hoveredColor}
@@ -264,11 +181,6 @@ export default function App() {
         visible={picking}
         left={mousePos.x}
         top={mousePos.y} />
-      {/* <canvas id='color-picker' ref={pickerRef} /> */}
-
-      {/* <ImageCanvas imageCanvasRef={imageCanvasRef}
-        handleMouseMoveOnCanvas={handleMouseMoveOnCanvas}
-        handleClickOnCanvas={handleClickOnCanvas} /> */}
 
       <canvas id='image-canvas'
         ref={imageCanvasRef}
@@ -278,5 +190,3 @@ export default function App() {
     </>
   );
 };
-
-// export default App;

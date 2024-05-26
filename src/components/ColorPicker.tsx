@@ -30,8 +30,6 @@ const ColorPicker: FunctionComponent<{
         style={{
           display: 'block',
           margin: 'auto',
-          // marginTop: (size - zoomSize) / 2,
-          // imageRendering: 'pixelated',
           borderRadius: '50%',
           border: `4px solid ${color}`
         }} />
