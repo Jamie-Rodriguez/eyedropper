@@ -1,4 +1,12 @@
-import { useState, useRef, useEffect, Dispatch, ChangeEvent, SetStateAction } from 'react';
+import {
+  useState,
+  useRef,
+  RefObject,
+  useEffect,
+  Dispatch,
+  ChangeEvent,
+  SetStateAction
+} from 'react';
 import './App.css';
 import useWindowSize from './hooks/window-size';
 import Controls from './components/Controls';
@@ -22,7 +30,9 @@ export default function App() {
   // Round the user-defined size to the nearest multiple of zoomSize
   const pickerSize = Math.ceil(161 / zoomSize) * zoomSize;
 
-  const pick = (event: React.MouseEvent<HTMLCanvasElement>, setColor: Dispatch<SetStateAction<string>>) => {
+  const pick = (event: React.MouseEvent<HTMLCanvasElement>,
+    imageCanvasRef: RefObject<HTMLCanvasElement>,
+    setColor: Dispatch<SetStateAction<string>>) => {
     if (!imageCanvasRef.current) return;
 
     const canvas = imageCanvasRef.current;
@@ -42,7 +52,11 @@ export default function App() {
     setColor(color);
   };
 
-  const updateZoom = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const updateZoom = (event: React.MouseEvent<HTMLCanvasElement>,
+    imageCanvasRef: RefObject<HTMLCanvasElement>,
+    pickerRef: RefObject<HTMLCanvasElement>,
+    zoomSize: number,
+    pickerSize: number) => {
     if (!imageCanvasRef.current) return;
 
     const canvas = imageCanvasRef.current;
@@ -158,13 +172,13 @@ export default function App() {
     const y = event.clientY - bounding.top;
     setMousePos({ x: x - pickerSize / 2, y });
 
-    pick(event, setHoveredColor);
-    updateZoom(event);
+    pick(event, imageCanvasRef, setHoveredColor);
+    updateZoom(event, imageCanvasRef, pickerRef, zoomSize, pickerSize);
   };
 
   const handleClickOnCanvas = (event: React.MouseEvent<HTMLCanvasElement>): void => {
     if (picking) {
-      pick(event, setSelectedColor);
+      pick(event, imageCanvasRef, setSelectedColor);
     }
   };
 
