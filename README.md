@@ -3,6 +3,8 @@ Eyedropper Demo
 
 This project demonstrates how an eyedropper tool could be implemented by using the Canvas API.
 
+![Screenshot of the tool](example.png)
+
 Getting Started
 ===============
 
